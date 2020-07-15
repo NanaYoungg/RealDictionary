@@ -1,78 +1,79 @@
-package model;
+package model.dto;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import model.dto.WordPair;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class WordPair {
+	public static final int ENGLISH = 0;
+	public static final int KOREAN = 1;
+	public static final int NOTHING = 2;
 
-public class WordPairModelVirtualDB {
-	private static WordPairModelVirtualDB instance = new WordPairModelVirtualDB();
-	public static WordPairModelVirtualDB getInstance() {
-		return instance;
+	private String[] words = new String[2];
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[영어] : ");
+		builder.append(words[ENGLISH]);
+		builder.append("\t\t");
+		builder.append("[한글] : ");
+		builder.append(words[KOREAN]);
+
+		return builder.toString();
 	}
-	
-	private ArrayList<WordPair> wordPairList = new ArrayList<>();
+	public String toStringForLog() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[영어] : ");
+		builder.append(words[ENGLISH]);
+		builder.append(", ");
+		builder.append("[한글] : ");
+		builder.append(words[KOREAN]);
 
+		return builder.toString();
+	}
 
-	private WordPairModelVirtualDB() {
-		BufferedReader in = null;
-		String line = null;
+	public void setEnglish(String english) {
+		words[ENGLISH] = english;
+	}
 
-		try {
-			in = new BufferedReader(new FileReader("C:\\Open_pose\\00.dataSet"));
-			while ((line = in.readLine()) != null) {
-				String[] words = line.split(",");
+	public void setKorean(String korean) {
+		words[KOREAN] = korean;
+	}
 
-				WordPair wordPair = new WordPair();
-				wordPair.setWords(words);
+	public static boolean isEnglishCode(int code) {	
+		if (('A' <= code && code <= 'Z') ||
+		    ('a' <= code && code <= 'z')) {
+		    return true;
+		    
+		    }
+		return false;
+	}	
+	public static int getLanguageType(String word) {
+		int code = word.charAt(0);
+		int language;
 
-				wordPairList.add(wordPair);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+		if (isEnglishCode(code)) {
+			language = ENGLISH;
+		} else {
+			language = KOREAN;
+		}
+
+		for (int i = 1; i < word.length(); i++) {
+			code = word.charAt(i);
+
+			if (language == ENGLISH && !isEnglishCode(code)) {
+				return NOTHING;
+			} else if (language == KOREAN && isEnglishCode(code)) {
+				return NOTHING;
 			}
 		}
-	}
 
-	public void finish() {
-		BufferedWriter out = null;
-
-		try {   
-			out = new BufferedWriter(new FileWriter("word_pair_list.txt"));  //경로고침 
-			for (WordPair wordPair : wordPairList) {
-				String[] words = wordPair.getWords();
-				out.write(words[WordPair.ENGLISH] + "," + words[WordPair.KOREAN] + "\n");
-				out.flush();// 나중에 지우고도 해보기
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public ArrayList<WordPair> getWordPairList() {
-		return wordPairList;
-	}
-
-	public void insertWord(WordPair wordPair) {
-		wordPairList.add(wordPair);
+		return language;
 	}
 }
