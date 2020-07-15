@@ -23,7 +23,7 @@ public class WordPairModelVirtualDB {
 		String line = null;
 
 		try {
-			in = new BufferedReader(new FileReader("C:\\Open_pose\\00.dataSet"));
+			in = new BufferedReader(new FileReader("word_pair_list.txt"));
 			while ((line = in.readLine()) != null) {
 				String[] words = line.split(",");
 
@@ -48,8 +48,8 @@ public class WordPairModelVirtualDB {
 	public void finish() {
 		BufferedWriter out = null;
 
-		try {   
-			out = new BufferedWriter(new FileWriter("word_pair_list.txt"));  //경로고침 
+		try {
+			out = new BufferedWriter(new FileWriter("word_pair_list.txt"));
 			for (WordPair wordPair : wordPairList) {
 				String[] words = wordPair.getWords();
 				out.write(words[WordPair.ENGLISH] + "," + words[WordPair.KOREAN] + "\n");

@@ -46,11 +46,12 @@ public class WordPair {
 		words[KOREAN] = korean;
 	}
 
-	public static boolean isEnglishCode(int code) {
-		if ((65 <= code && code <= 90) ||        
-			(97 <= code && code <= 122)) {
-			return true;
-		}		
+	public static boolean isEnglishCode(int code) {	
+		if (('A' <= code && code <= 'Z') ||
+		    ('a' <= code && code <= 'z')) {
+		    return true;
+		    
+		    }
 		return false;
 	}	
 	public static int getLanguageType(String word) {
