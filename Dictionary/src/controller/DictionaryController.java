@@ -66,6 +66,7 @@ public class DictionaryController {
 				logger.info("<단어 삭제> " + word);
 			} else {
 				
+				 EndView.messageView("삭제하고자 하는 단어가 없습니다.")
 			}
 			
 		} catch (NotLanguageTypeException e) {
