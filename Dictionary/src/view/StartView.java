@@ -1,3 +1,5 @@
+//branch 합성 테스트
+
 package view;
 
 import java.io.BufferedReader;
